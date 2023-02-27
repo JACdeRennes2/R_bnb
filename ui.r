@@ -2,41 +2,25 @@ library(shiny)
 library(colourpicker)
 library(shinydashboard)
 library(rAmCharts)
+library(leaflet)
+
+airbnb_data <- read.csv("data/data_R_bnb.csv")
+pays_liste <- unique(airbnb_data$pays)
 
 
-# Define UI for application that draws a histogram
-shinyUI(
-  # navbarPage
-  navbarPage("Premiers pas avec shiny",
-             
-       tabPanel("Data", 
-                navlistPanel(
-                  "Titre de la structure de séléction",
-                  tabPanel("table", dataTableOutput("table")),
-                  tabPanel("summary", verbatimTextOutput("summary"))
-                )
-       ), 
-       
-       tabPanel("Visualisation",
-           fluidRow(
-             column(
-               width = 3,
-               sliderInput("bins",
-                           "Number of bins:",
-                           min = 1,
-                           max = 50,
-                           value = 30),
-               colourInput(inputId = "color", label = "Couleur :", value = "purple"),
-               textInput(inputId = "titre", label = "Titre :"),
-               radioButtons(inputId = "Pays", label = "Pays : ", choices = colnames(faithful)),
-             ),
-             column(
-               width = 9,
-               tabsetPanel(id="viz",
-                  tabPanel("histogramme", amChartsOutput("distPlot"))
-                  )
-           ))
-              
-       )
+fluidPage(
+  
+  titlePanel("Carte des AirBnBs en Europe"),
+  
+  # Sélection des pays
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("pays", "Choisir un pays:", choices = pays_liste)
+    ),
+    
+    # Carte Leaflet interactive
+    mainPanel(
+      leafletOutput("carte")
+    )
   )
 )
