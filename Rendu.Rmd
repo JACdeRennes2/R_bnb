@@ -1,0 +1,17 @@
+---
+title: "R_bnb"
+output: 
+  html_document:
+    theme: cosmo
+    highlight: espresso
+---
+
+# Quels sont les facteurs qui permettent d'expliquer la différence de prix entre 2 biens?
+
+les données proviennet du site kaggle : https://www.kaggle.com/datasets/thedevastator/airbnb-prices-in-european-cities
+
+```{r}
+data_R_bnb <- read.csv("data/data_R_bnb.csv", stringsAsFactors = TRUE)
+summary(data)
+```
+
