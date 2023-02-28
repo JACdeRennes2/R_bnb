@@ -28,7 +28,6 @@ shinyServer(function(input, output) {
                        clusterOptions = markerClusterOptions(maxClusterRadius = 32),
                        color = ~ColorPal(realSum), 
                        stroke = FALSE,  
-                       fillOpacity = 0.7)
   })
   
 })
