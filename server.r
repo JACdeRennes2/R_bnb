@@ -28,6 +28,10 @@ shinyServer(function(input, output) {
                        clusterOptions = markerClusterOptions(maxClusterRadius = 32),
                        color = ~ColorPal(realSum), 
                        stroke = FALSE,  
+                       fillOpacity = 0.7, 
+                       label=~paste0(as.character(floor(realSum)),"€", "<br>", 
+                       "Note des utilisateurs: ", as.character(guest_satisfaction_overall, "/100")))
+      
   })
   
 })
