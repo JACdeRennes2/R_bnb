@@ -15,7 +15,7 @@ fluidPage(
   # Sélection des pays
   sidebarLayout(
     sidebarPanel(
-      selectInput("pays", "Choisir un pays:", choices = pays_liste)
+      selectInput("pays", "Choisir un pays:", choices = c("Europe", pays_liste))
     ),
     
     # Carte Leaflet interactive
