@@ -7,7 +7,7 @@ library(dplyr)
 amsterdam_weekends <- read.csv("data/amsterdam_weekends.csv", stringsAsFactors=TRUE)
 amsterdam_weekends$pays <- "Pays-Bas"
 athens_weekends <- read.csv("data/athens_weekends.csv", stringsAsFactors=TRUE)
-athens_weekends$pays <- "Grèce"
+athens_weekends$pays <- "Grece"
 barcelona_weekends <- read.csv("data/barcelona_weekends.csv",stringsAsFactors=TRUE)
 barcelona_weekends$pays <- "Espagne"
 berlin_weekends <- read.csv("data/berlin_weekends.csv", stringsAsFactors=TRUE)
@@ -32,7 +32,7 @@ weekends <- rbind(amsterdam_weekends,athens_weekends,barcelona_weekends,budapest
 amsterdam_weekdays <- read.csv("data/amsterdam_weekdays.csv", stringsAsFactors=TRUE)
 amsterdam_weekdays$pays <- "Pays-Bas"
 athens_weekdays <- read.csv("data/athens_weekdays.csv", stringsAsFactors=TRUE)
-athens_weekdays$pays <- "Grèce"
+athens_weekdays$pays <- "Grece"
 barcelona_weekdays <- read.csv("data/barcelona_weekdays.csv",stringsAsFactors=TRUE)
 barcelona_weekdays$pays <- "Espagne"
 berlin_weekdays <- read.csv("data/berlin_weekdays.csv", stringsAsFactors=TRUE)
@@ -53,5 +53,5 @@ vienna_weekdays$pays <- "Autriche"
 weekdays <- rbind(amsterdam_weekdays,athens_weekdays,barcelona_weekdays,budapest_weekdays,berlin_weekdays,lisbon_weekdays, paris_weekdays,london_weekdays,rome_weekdays,vienna_weekdays)
 
 data <- bind_rows(weekdays=weekdays, weekends=weekends, .id= "period")
-write.csv(data, file = "data/data_R_bnb.csv", fileEncoding = "UTF-8")
+write.csv(data, file = "data/data_R_bnb.csv", fileEncoding = "utf-8")
 
