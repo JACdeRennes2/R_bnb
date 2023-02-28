@@ -15,14 +15,10 @@ shinyServer(function(input, output) {
       filter(pays == input$pays)
   })
   
-  # Afficher la carte Leaflet interactive
   output$carte <- renderLeaflet({
     leaflet(data = airbnb_data_filtre()) |>
-      # Centrer la carte sur l'Europe
       addTiles() |>
-      # Ajouter les marqueurs pour les points Airbnb filtrés
-      addCircleMarkers(data = airbnb_data, 
-                       lng = ~ lng, 
+      addCircleMarkers(lng = ~ lng, 
                        lat = ~ lat, 
                        radius = ~ 10,
                        clusterOptions = markerClusterOptions(),
