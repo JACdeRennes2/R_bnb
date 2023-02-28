@@ -51,7 +51,11 @@ vienna_weekdays <- read.csv("data/vienna_weekdays.csv", stringsAsFactors=TRUE)
 vienna_weekdays$pays <- "Autriche"
 
 weekdays <- rbind(amsterdam_weekdays,athens_weekdays,barcelona_weekdays,budapest_weekdays,berlin_weekdays,lisbon_weekdays, paris_weekdays,london_weekdays,rome_weekdays,vienna_weekdays)
+weekdays <- data.frame(weekdays)
+weekends <- data.frame(weekends)
+data <- merge(weekdays, weekends[,c("realSum",'lng', 'lat')], by = c("lng", "lat"))
+data <-  data[,-3]
+names(data)[c(3,21)] <- c("prix_semaine","prix_weekend")
 
-data <- bind_rows(weekdays=weekdays, weekends=weekends, .id= "period")
 write.csv(data, file = "data/data_R_bnb.csv", fileEncoding = "utf-8")
 
