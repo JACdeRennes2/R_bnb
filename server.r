@@ -25,7 +25,7 @@ shinyServer(function(input, output) {
       addCircleMarkers(lng = ~ lng, 
                        lat = ~ lat, 
                        radius = ~ 10,
-                       clusterOptions = markerClusterOptions(maxClusterRadius = 25),
+                       clusterOptions = markerClusterOptions(maxClusterRadius = 32),
                        color = ~ColorPal(realSum), 
                        stroke = FALSE,  
                        fillOpacity = 0.7)
