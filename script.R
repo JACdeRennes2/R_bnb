@@ -53,5 +53,5 @@ vienna_weekdays$pays <- "Autriche"
 weekdays <- rbind(amsterdam_weekdays,athens_weekdays,barcelona_weekdays,budapest_weekdays,berlin_weekdays,lisbon_weekdays, paris_weekdays,london_weekdays,rome_weekdays,vienna_weekdays)
 
 data <- bind_rows(weekdays=weekdays, weekends=weekends, .id= "period")
-write.csv(data, file = "data/data_R_bnb.csv")
+write.csv(data, file = "data/data_R_bnb.csv", fileEncoding = "UTF-8")
 
