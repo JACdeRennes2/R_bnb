@@ -11,7 +11,64 @@ output:
 les données proviennet du site kaggle : https://www.kaggle.com/datasets/thedevastator/airbnb-prices-in-european-cities
 
 ```{r}
-data_R_bnb <- read.csv("data/data_R_bnb.csv", stringsAsFactors = TRUE)
-summary(data)
+data_R_bnb <- na.omit(read.csv("data/data_R_bnb.csv", stringsAsFactors = TRUE, row.names = 1))
+summary(data_R_bnb)
 ```
+
+On cherche à quantifier l'influence de plusieurs variables explicatives sur le prix des Airbnb. Et plus précisément qu'elles sont celles qui permettent d'expliquer une différence de prix entre la semaine et le weekend. 
+En effet, on observe une différence de prix des biens entre la semaine et le weekend. Cependant on peut observer que cette différence de prix entre la semaine et le week-end n'est pas la même pour tous les biens. Comme le montre le graphique suivant 
+
+```{r, fig.align='center'}
+library(ggplot2)
+#prix moyen des airbnb la semaine 
+semaine <- round(mean(data_R_bnb$prix_semaine), digits = 2 )
+#prix moyen des aibrnb le weekend
+week_end <- round(mean(data_R_bnb$prix_weekend),2)
+data.frame(semaine, week_end)
+
+
+
+# Chargement des packages nécessaires
+library(ggplot2)
+library(tidyr)
+
+# Exemple de données
+data <- data.frame(
+  semaine = data_R_bnb$prix_semaine,
+  weekend = data_R_bnb$prix_weekend
+)
+
+# Transformation des données en format long
+data_long <- gather(data, key = "prix", value = "valeur")
+
+# Création du boxplot en facettes
+ggplot(data_long, aes(x = prix, y = valeur)) +
+  geom_boxplot() +
+  facet_grid(. ~ prix, scales = "free_x")+ 
+    coord_cartesian(ylim = c(35, 600))+
+    xlab("moment de la semaine")
+rm(data, data_long)
+```
+
+Sur le Graphique précédent il est clair que les Airbnb sont plus cher le weekend que la semaine. On peut remarquer cependant que la hausse des prix n'est pas exactement partout la même. (Il semblerait que plus le logement est cher la semaine plus ce dernier est cher le weekend). 
+
+Nous allons tenter de modéliser le prix des logements par les variables suivantes: 
+
+* room_type : facteur à 3 modalités (appartement privé, chambre partagé, chambre privée)
+* person_capacity : Nombre de personnes pouvant loger dans l'appartement
+* host_is_superhost : Variable binaire (1 si Propriétaire à été reconnu comme quelqu'un de confiance par les utilisateurs)
+* cleanliness_rating : note de propreté sur 10 
+* guest_satsifaction_overall : note de satsifaction des utilisateurs sur 100
+* bedrooms : nombre de chambre
+* metro_dist : distance au métro
+
+Nous allons tenter une régréssion linéaire 
+
+```{r}
+library(corrplot)
+cor_data <- cor(data_R_bnb)
+#corrplot(cor_data, method = color)
+lm(prix_semaine~room_type+person_capacity+host_is_superhost+cleanliness_rating+guest_satsifaction_overall+bedrooms+metro_dist, data = data_R_bnb)
+```
+
 
