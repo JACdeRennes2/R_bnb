@@ -56,6 +56,7 @@ weekends <- data.frame(weekends)
 data <- merge(weekdays, weekends[,c("realSum",'lng', 'lat')], by = c("lng", "lat"))
 data <-  data[,-3]
 names(data)[c(3,21)] <- c("prix_semaine","prix_weekend")
+data <-  data[-1]
 
 write.csv(data, file = "data/data_R_bnb.csv", fileEncoding = "utf-8")
 
