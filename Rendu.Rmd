@@ -61,14 +61,44 @@ Nous allons tenter de modéliser le prix des logements par les variables suivant
 * guest_satsifaction_overall : note de satsifaction des utilisateurs sur 100
 * bedrooms : nombre de chambre
 * metro_dist : distance au métro
+* dist : distance au centre de la ville
 
-Nous allons tenter une régréssion linéaire 
 
-```{r}
+# Analyse de corrélation 
+
+```{r, fig.align='center'}
 library(corrplot)
-cor_data <- cor(data_R_bnb)
-#corrplot(cor_data, method = color)
-lm(prix_semaine~room_type+person_capacity+host_is_superhost+cleanliness_rating+guest_satsifaction_overall+bedrooms+metro_dist, data = data_R_bnb)
+# Création de variables intermédiaire
+variables_num1 <- data_R_bnb[,c("prix_semaine", "person_capacity", "cleanliness_rating","guest_satisfaction_overall","bedrooms", "metro_dist", "dist")]
+Varaibles_num2 <- data_R_bnb[,c("prix_weekend", "person_capacity", "cleanliness_rating","guest_satisfaction_overall","bedrooms", "metro_dist", "dist")]
+
+cor_data1 <- cor(variables_num1)
+cor_data2 <- cor(Varaibles_num2)
+# Définition des paramètres graphiques
+layout(matrix(c(1,2), nrow=1, ncol=2))
+
+# Tracage des graphiques 
+corrplot(cor_data1, method = c("shade"), type = "lower",order="hclust", tl.col="black")
+corrplot(cor_data2, method = c("shade"), type = "lower",order="hclust", tl.col="black")
+rm(cor_data1,cor_data2)
 ```
 
+A la vue du graphique précédent, on n'observe pas de différence significative entre la corrélation des variables la semaine et le weekends. 
+
+# Régression linéaie
+```{r}
+reg1 <-  lm(prix_semaine~room_type+person_capacity+host_is_superhost+cleanliness_rating+bedrooms+guest_satisfaction_overall+metro_dist+dist, data = data_R_bnb)
+summary(reg1)
+reg2 <-  lm(prix_weekend~room_type+person_capacity+host_is_superhost+cleanliness_rating+guest_satisfaction_overall+bedrooms+metro_dist+dist, data = data_R_bnb)
+summary(reg2)
+```
+
+
+```{r}
+```
+
+# Conclusion 
+
+* Ca aurait été bien d'avoir les données saisonières pour faire des stats en fonction du temps 
+* Ca aurait été bien 
 
