@@ -6,7 +6,7 @@ library(leaflet)
 
 airbnb_data <- read.csv("data/data_R_bnb.csv", encoding = "UTF-8")
 ColorPal <- colorNumeric(scales::seq_gradient_pal(low = "yellow", high = "red", 
-                                                   space = "Lab"), domain = c(0,1.2))
+                                                   space = "Lab"), domain = c(34,3000))
 
 shinyServer(function(input, output) {
   
@@ -27,10 +27,10 @@ shinyServer(function(input, output) {
                        lat = ~ lat, 
                        radius = ~ 10,
                        clusterOptions = markerClusterOptions(maxClusterRadius = 32),
-                       color = ~ColorPal(realSum), 
+                       color=~ColorPal(realSum),
                        stroke = FALSE,
                        fillOpacity = 0.7, 
-                       label = ~paste0(as.character(floor(realSum)), "€", "Note des utilisateurs: ", as.character(guest_satisfaction_overall), "/100")
+                       label = ~ paste(as.character(floor(realSum)), "€", "<br/><b> Note des utilisateurs: </b>", as.character(guest_satisfaction_overall), "/100")
                        )
   })
   
