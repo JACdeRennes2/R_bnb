@@ -10,9 +10,9 @@ output:
 
 les données proviennet du site kaggle : https://www.kaggle.com/datasets/thedevastator/airbnb-prices-in-european-cities
 
-```{r}
+```{r, include=FALSE}
+#Importation des données
 data_R_bnb <- na.omit(read.csv("data/data_R_bnb.csv", stringsAsFactors = TRUE, row.names = 1))
-summary(data_R_bnb)
 ```
 
 On cherche à quantifier l'influence de plusieurs variables explicatives sur le prix des Airbnb. Et plus précisément qu'elles sont celles qui permettent d'expliquer une différence de prix entre la semaine et le weekend. 
@@ -25,8 +25,6 @@ semaine <- round(mean(data_R_bnb$prix_semaine), digits = 2 )
 #prix moyen des aibrnb le weekend
 week_end <- round(mean(data_R_bnb$prix_weekend),2)
 data.frame(semaine, week_end)
-
-
 
 # Chargement des packages nécessaires
 library(ggplot2)
@@ -45,7 +43,7 @@ data_long <- gather(data, key = "prix", value = "valeur")
 ggplot(data_long, aes(x = prix, y = valeur)) +
   geom_boxplot() +
   facet_grid(. ~ prix, scales = "free_x")+ 
-    coord_cartesian(ylim = c(35, 600))+
+    coord_cartesian(ylim = c(35, 500))+
     xlab("moment de la semaine")
 rm(data, data_long)
 ```
@@ -83,19 +81,64 @@ corrplot(cor_data2, method = c("shade"), type = "lower",order="hclust", tl.col="
 rm(cor_data1,cor_data2)
 ```
 
-A la vue du graphique précédent, on n'observe pas de différence significative entre la corrélation des variables la semaine et le weekends. 
+A la vue du graphique précédent, on n'observe pas de différence significative entre la corrélation des variables la semaine et le weekends.
+
+# Anova 
+
+On peut réaliser une analyse de variance (ANOVA) pour déterminer si le prix moyen des logements diffère significativement entre les différentes catégories de room_type ou de host_is_superhost   
+
+```{r, fig.align='center'}
+ggplot(data_R_bnb, aes(x=room_type, y=prix_semaine, fill=host_is_superhost)) +
+  geom_boxplot() +
+  labs(x="Type de chambre", y="Prix/semaine", fill="Hôte de confiance") +
+  theme_classic()+
+    coord_cartesian(ylim = c(35, 500))+ggtitle("Boxplot des prix des chambres en semaine selon les modalités des chambres")
+
+ggplot(data_R_bnb, aes(x=room_type, y=prix_weekend, fill=host_is_superhost)) +
+  geom_boxplot() +
+  labs(x="Type de chambre", y="Prix/weekend", fill="Hôte de confiance") +
+  theme_classic()+
+    coord_cartesian(ylim = c(35, 500))+ggtitle("Boxplot des prix des chambres le weekend selon les modalités des chambres")
+```
+
+On remarque que les maison et les appartement entiers dont le propriétaires n'est pas super host ont tendances à être plus cher que ceux dont le propriétaire est super host. Ce qui semble déconcertant. On remaque que les chambres privés semblent ne pas suivre la même loi, puisque les prix sont les quasi les mêmes pour les 2. 
+
+```{r}
+anova_result <- aov(prix_semaine ~ room_type + host_is_superhost, data=data_R_bnb)
+summary(anova_result)
+tukey_result <- TukeyHSD(anova_result, "room_type")
+tukey_result
+```
+
+```{r}
+#Meme calcul pour les prix le weekend
+anova_result <- aov(prix_weekend ~ room_type + host_is_superhost, data=data_R_bnb)
+summary(anova_result)
+tukey_result <- TukeyHSD(anova_result, "room_type")
+tukey_result
+```
+
 
 # Régression linéaie
 ```{r}
 reg1 <-  lm(prix_semaine~room_type+person_capacity+host_is_superhost+cleanliness_rating+bedrooms+guest_satisfaction_overall+metro_dist+dist, data = data_R_bnb)
 summary(reg1)
+
+# Création du dataframe pour la représentation graphique
+df <- data.frame(x = fitted(reg1), y = resid(reg1))
+
+# Création du graphique
+
+ggplot(df, aes(x = x, y = y)) +
+  geom_point(color = "#3F51B5") +
+  geom_smooth(method = "loess", se = FALSE, color = "#F44336") +
+  labs(title = "Régression linéaire prixn semaine", x = "Valeurs ajustées", y = "Résidus")
+
+
 reg2 <-  lm(prix_weekend~room_type+person_capacity+host_is_superhost+cleanliness_rating+guest_satisfaction_overall+bedrooms+metro_dist+dist, data = data_R_bnb)
 summary(reg2)
 ```
 
-
-```{r}
-```
 
 # Conclusion 
 
