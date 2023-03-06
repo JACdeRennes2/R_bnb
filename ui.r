@@ -17,6 +17,8 @@ fluidPage(
     sidebarPanel(
       selectInput("pays", "Choisir un pays :", choices = c("Europe", pays_liste)),
       radioButtons("time_week", "Moment de la semaine :", choices = week_de),
+      sliderInput("values_range", "Montant des locations (en €) :", min = floor(min(airbnb_data$realSum)), max = 1000, value = c(floor(min(airbnb_data$realSum)), 1000)),
+      checkboxInput("more_than_1000", "Afficher les valeurs supérieures à 1000", FALSE),
       plotOutput("hist")
     ),
   

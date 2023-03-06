@@ -30,7 +30,7 @@ pal <- colorNumeric(scales::seq_gradient_pal(low = "yellow", high = "red",
                                              space = "Lab"), domain = europe_polygons$mean)
 
 
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
   
   airbnb_data_histo <- reactive({
     if(input$pays == "Europe") {
@@ -44,10 +44,10 @@ shinyServer(function(input, output) {
   airbnb_data_filtre <- reactive({
     if(input$pays == "Europe") {
       airbnb_data |> 
-        filter(period == input$time_week)
+        filter(period == input$time_week, realSum > input$values_range[1], realSum < input$values_range[2])
     } else {
       airbnb_data |> 
-        filter(pays == input$pays & period == input$time_week)
+        filter(pays == input$pays & period == input$time_week, realSum == input$values_range)
     }
   })
   
@@ -70,6 +70,18 @@ shinyServer(function(input, output) {
                   weight = 1,
                   color = "#BDBDC3")
   })
+  
+  observeEvent(input$more_than_1000, {
+    if (input$more_than_1000) {
+      max_value <- max(airbnb_data$realSum)
+    } else {
+      max_value <- 1000
+    }
+    updateSliderInput(session, "values_range", max = max_value)
+  })
+  
+  labels <- c(floor(min(airbnb_data$realSum)), seq(1000, 3000, 500), "1000 et +")
+  updateSliderInput(session, "values_range")
   
   output$hist <- renderPlot({
     ggplot(airbnb_data_histo(), aes(x = realSum, fill=period)) +
