@@ -86,7 +86,7 @@ shinyServer(function(input, output, session) {
   output$hist <- renderPlot({
     ggplot(airbnb_data_histo(), aes(x = realSum, fill=period)) +
       geom_histogram(bins=20) +
-      xlim(0,2000) +
+      xlim(input$values_range) +
       xlab("Prix") +
       ggtitle("Répartition des airbnbs en fonction du prix") +
       labs(fill = "Période")
