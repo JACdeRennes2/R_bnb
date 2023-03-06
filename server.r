@@ -52,7 +52,6 @@ shinyServer(function(input, output) {
                        color=~ColorPal(realSum),
                        stroke = FALSE,
                        fillOpacity = 0.7, 
-                       label = ~ paste(as.character(floor(realSum)), "€", "<br/><b> Note des utilisateurs: </b>", as.character(guest_satisfaction_overall), "/100")
                        label = ~ paste(as.character(floor(realSum)), "€", "\n" ,"Note des utilisateurs :", as.character(guest_satisfaction_overall), "/100")
                        )|> 
       addPolygons(data = europe_polygons,
