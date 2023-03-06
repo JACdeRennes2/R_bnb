@@ -44,7 +44,6 @@ shinyServer(function(input, output) {
   
   output$carte <- renderLeaflet({
     leaflet(data = airbnb_data_filtre()) |>
-      setView(lng = 8.25, lat = 48.52, zoom = 5) |> 
       addTiles() |>
       addCircleMarkers(lng = ~ lng, 
                        lat = ~ lat, 
@@ -54,6 +53,7 @@ shinyServer(function(input, output) {
                        stroke = FALSE,
                        fillOpacity = 0.7, 
                        label = ~ paste(as.character(floor(realSum)), "€", "<br/><b> Note des utilisateurs: </b>", as.character(guest_satisfaction_overall), "/100")
+                       label = ~ paste(as.character(floor(realSum)), "€", "\n" ,"Note des utilisateurs :", as.character(guest_satisfaction_overall), "/100")
                        )|> 
       addPolygons(data = europe_polygons,
                   fillColor = ~pal(mean),
