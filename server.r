@@ -57,7 +57,7 @@ shinyServer(function(input, output) {
                        )|> 
       addPolygons(data = europe_polygons,
                   fillColor = ~pal(mean),
-                  fillOpacity = 0.7,
+                  fillOpacity = 0.4,
                   weight = 1,
                   color = "#BDBDC3")
   })
