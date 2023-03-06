@@ -61,19 +61,3 @@ data <- bind_rows(weekdays=weekdays, weekends=weekends, .id="period")
 
 write.csv(data, file = "data/data_R_bnb.csv", fileEncoding = "utf-8")
 
-
-################################################################################
-## Calcul moyennes par pays
-
-europe_polygons <- st_read("data/NUTS_RG_20M_2021_3035.shp") 
-europe_polygons <- europe_polygons[c(11, 5, 24, 1, 22, 3, 62, 70, 28, 43), c(4,10)]
-europe_polygons$NAME_LATN <- c("Allemagne", "Autriche", "Espagne", "France", "Grece", "Hongrie", "Italie", "Pays-Bas", "Portugal", "Royaume-Uni")
-names(europe_polygons) <- c("pays", "geometry")
-
-mean_prices <- data |> 
-  group_by(pays) |> 
-  summarise(mean(prix_semaine), mean(prix_weekend))
-europe_polygons <- merge(mean_prices, europe_polygons)
-names(europe_polygons) <- c("pays", "mean_days", "mean_ends", "geometry")
-
-write.csv(europe_polygons, file = "data/europe_polygons.csv", fileEncoding = "utf-8")

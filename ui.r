@@ -16,7 +16,8 @@ fluidPage(
   sidebarLayout(
     sidebarPanel(
       selectInput("pays", "Choisir un pays :", choices = c("Europe", pays_liste)),
-      radioButtons("time_week", "Moment de la semaine :", choices = week_de)
+      radioButtons("time_week", "Moment de la semaine :", choices = week_de),
+      plotOutput("hist")
     ),
   
     mainPanel(
