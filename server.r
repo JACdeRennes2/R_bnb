@@ -25,7 +25,7 @@ names(europe_polygons) <- c("mean", "pays", "geometry")
 
 
 ColorPal <- colorNumeric(scales::seq_gradient_pal(low = "yellow", high = "red", 
-                                                  space = "Lab"), domain = c(34,3000))
+                                                  space = "Lab"), domain = c(34,20000))
 pal <- colorNumeric(scales::seq_gradient_pal(low = "yellow", high = "red",
                                              space = "Lab"), domain = europe_polygons$mean)
 
@@ -62,6 +62,7 @@ shinyServer(function(input, output, session) {
                   color = "#BDBDC3")
   })
   
+<<<<<<< HEAD
   observeEvent(input$more_than_1000, {
     if (input$more_than_1000) {
       max_value <- max(airbnb_data$realSum)
@@ -74,4 +75,15 @@ shinyServer(function(input, output, session) {
   labels <- c(floor(min(airbnb_data$realSum)), seq(1000, 3000, 500), "1000 et +")
   updateSliderInput(session, "values_range")
   
+=======
+  output$hist <- renderPlot({
+    ggplot(airbnb_data, aes(x = realSum, fill=period)) +
+      geom_histogram(bins=20) +
+      xlim(0,2000) +
+      xlab("Prix") +
+      ggtitle("Répartition des airbnbs en fonction du prix") +
+      labs(fill = "Période")
+  })
+  
+>>>>>>> d3e4303bd4925b477e7ca0f6e2cdffa8d67911eb
 })
