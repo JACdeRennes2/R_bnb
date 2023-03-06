@@ -24,8 +24,10 @@ europe_polygons$LEVL_CODE <- round(europe_polygons$LEVL_CODE)
 names(europe_polygons) <- c("mean", "pays", "geometry")
 
 
-ColorPal <- colorNumeric(scales::seq_gradient_pal(low = "yellow", high = "red", 
-                                                  space = "Lab"), domain = c(34,20000))
+ColorPal <-  colorNumeric(
+  palette = c("yellow", "red", "brown"),
+  domain = c(min(airbnb_data$realSum), 1000, max(airbnb_data$realSum))
+)
 pal <- colorNumeric(scales::seq_gradient_pal(low = "yellow", high = "red",
                                              space = "Lab"), domain = europe_polygons$mean)
 
@@ -47,7 +49,7 @@ shinyServer(function(input, output, session) {
         filter(period == input$time_week, realSum > input$values_range[1], realSum < input$values_range[2])
     } else {
       airbnb_data |> 
-        filter(pays == input$pays & period == input$time_week, realSum == input$values_range)
+        filter(pays == input$pays & period == input$time_week, realSum > input$values_range[1], realSum < input$values_range[2])
     }
   })
   
@@ -68,7 +70,12 @@ shinyServer(function(input, output, session) {
                   fillColor = ~pal(mean),
                   fillOpacity = 0.4,
                   weight = 1,
-                  color = "#BDBDC3")
+                  color = "#BDBDC3") |> 
+      addLegend(position = "topright",
+                pal = ColorPal,
+                values = airbnb_data$realSum,
+                title = "Montant des locations",
+                opacity = 0.7)
   })
   
   observeEvent(input$more_than_1000, {
