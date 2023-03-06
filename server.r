@@ -44,7 +44,7 @@ shinyServer(function(input, output) {
   
   output$carte <- renderLeaflet({
     leaflet(data = airbnb_data_filtre()) |>
-      setView(lng = 15.25, lat = 48.52, zoom = 4) |> 
+      setView(lng = 8.25, lat = 48.52, zoom = 5) |> 
       addTiles() |>
       addCircleMarkers(lng = ~ lng, 
                        lat = ~ lat, 

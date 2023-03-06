@@ -20,7 +20,7 @@ fluidPage(
     ),
   
     mainPanel(
-      leafletOutput("carte")
+      leafletOutput("carte", height = 750, width = 900)
     )
   )
 )
