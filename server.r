@@ -34,6 +34,15 @@ pal <- colorNumeric(scales::seq_gradient_pal(low = "yellow", high = "red",
 
 shinyServer(function(input, output, session) {
   
+  airbnb_data_histo <- reactive({
+    if(input$pays == "Europe") {
+      airbnb_data
+    } else {
+      airbnb_data |> 
+        filter(pays == input$pays)
+    }
+  })
+  
   airbnb_data_filtre <- reactive({
     if(input$pays == "Europe") {
       airbnb_data |> 
@@ -82,9 +91,9 @@ shinyServer(function(input, output, session) {
   updateSliderInput(session, "values_range")
   
   output$hist <- renderPlot({
-    ggplot(airbnb_data, aes(x = realSum, fill=period)) +
+    ggplot(airbnb_data_histo(), aes(x = realSum, fill=period)) +
       geom_histogram(bins=20) +
-      xlim(0,2000) +
+      xlim(input$values_range) +
       xlab("Prix") +
       ggtitle("Répartition des airbnbs en fonction du prix") +
       labs(fill = "Période")
