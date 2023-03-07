@@ -24,12 +24,21 @@ europe_polygons$LEVL_CODE <- round(europe_polygons$LEVL_CODE)
 names(europe_polygons) <- c("mean", "pays", "geometry")
 
 
-ColorPal <-  colorNumeric(
+
+ColorPal <-  colorQuantile(
   palette = c("yellow", "red", "brown"),
-  domain = c(min(airbnb_data$realSum), 1000, max(airbnb_data$realSum))
+  domain = airbnb_data$realSum,
+  probs = seq(0, 1, by = 0.1)
 )
 pal <- colorNumeric(scales::seq_gradient_pal(low = "yellow", high = "red",
                                              space = "Lab"), domain = europe_polygons$mean)
+
+
+qpal_colors <- unique(ColorPal(sort(airbnb_data$realSum)))
+qpal_labs <- quantile(airbnb_data$realSum, seq(0, 1, by = 0.1))
+qpal_labs <- floor(qpal_labs)
+qpal_labs <- paste(lag(qpal_labs), qpal_labs, sep = " - ")[-1]
+
 
 
 shinyServer(function(input, output, session) {
@@ -64,18 +73,27 @@ shinyServer(function(input, output, session) {
                        color=~ColorPal(realSum),
                        stroke = FALSE,
                        fillOpacity = 0.7, 
-                       label = ~ paste(as.character(floor(realSum)), "€", "\n" ,"Note des utilisateurs :", as.character(guest_satisfaction_overall), "/100")
-                       )|> 
+                       label = ~paste(as.character(floor(realSum)), "€", "Note des utilisateurs :", as.character(guest_satisfaction_overall), "/100"),
+                       group = "circles")|> 
       addPolygons(data = europe_polygons,
                   fillColor = ~pal(mean),
                   fillOpacity = 0.4,
                   weight = 1,
-                  color = "#BDBDC3") |> 
-      addLegend(position = "topright",
-                pal = ColorPal,
+                  color = "#BDBDC3",
+                  group = "polygons") |> 
+      addLegend(group = "polygons",
+                position = "topright",
+                pal = pal,
+                values = europe_polygons$mean,
+                title = HTML("Montant moyen <br>des locations <br>par pays"),
+                opacity = 0.7)|> 
+      addLegend(group = "circles",
+                position = "topright",
+                colors = qpal_colors,
                 values = airbnb_data$realSum,
-                title = "Montant des locations",
-                opacity = 0.7)
+                title = HTML("Montant des <br>locations"),
+                labels = qpal_labs,
+                opacity = 0.7) 
   })
   
   observeEvent(input$more_than_1000, {
