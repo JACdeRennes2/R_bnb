@@ -23,6 +23,8 @@ europe_polygons$LEVL_CODE <- mean_prices$`mean(realSum)`
 europe_polygons$LEVL_CODE <- round(europe_polygons$LEVL_CODE)
 names(europe_polygons) <- c("mean", "pays", "geometry")
 
+europe_polygons$longitudes <- c(13.4, 16.37, 2.17, 2.33, 23.73, 19.04, 12.5, 4.90, -9.14, -0.13)
+europe_polygons$latitudes <- c(52.52, 48.21, 41.39, 48.87, 37.98, 47.5, 41.9, 52.37, 38.72, 51.51)
 
 
 ColorPal <-  colorQuantile(
@@ -62,9 +64,33 @@ shinyServer(function(input, output, session) {
     }
   })
   
+  lat <- reactive({
+    if(input$pays == "Europe") {
+      48.52
+    } else {
+      europe_polygons$latitudes[which(europe_polygons$pays == input$pays)]
+    }
+  })
+  
+  lng <- reactive({
+    if(input$pays == "Europe") {
+      8.25
+    } else {
+      europe_polygons$longitudes[which(europe_polygons$pays == input$pays)]
+    }
+  })
+  
+  zoom <- reactive({
+    if(input$pays == "Europe") {
+      5
+    } else {
+      12
+    }
+  })
+  
   output$carte <- renderLeaflet({
     leaflet(data = airbnb_data_filtre()) |>
-      setView(lng = 8.25, lat = 48.52, zoom = 5) |> 
+      setView(lng = lng(), lat = lat(), zoom = zoom()) |> 
       addTiles() |>
       addCircleMarkers(lng = ~ lng, 
                        lat = ~ lat, 
