@@ -12,6 +12,27 @@ week_de <- unique(airbnb_data$period)
 
 navbarPage(title = "R_bnb",
            theme = shinytheme("flatly"),
+           tabPanel(
+             title = "Accueil",
+             fluidPage(
+               titlePanel("Présentation du projet"),
+               sidebarLayout(
+                 sidebarPanel(
+                   h4("À propos du projet"),
+                   p("Le projet R_bnb a pour objectif d'analyser les données d'Airbnb en Europe."),
+                   h4("Comment utiliser cette application ?"),
+                   p("Choisissez un pays dans le menu déroulant et un moment de la semaine en cliquant sur les boutons radio."),
+                   p("Vous pouvez également ajuster le montant des locations en utilisant le curseur et afficher les valeurs supérieures à 1000 en cochant la case correspondante."),
+                   p("Ensuite, explorez la carte pour voir les locations Airbnb dans le pays choisi."),
+                   p("Les locations sont représentées par des marqueurs rouges, et la taille des marqueurs correspond au montant de la location."),
+                   p("Cliquez sur un marqueur pour obtenir plus d'informations sur cette location.")
+                 ),
+                 mainPanel(
+                   h2("Bienvenue sur R_bnb !")
+                 )
+               )
+             )
+           ),
            tabPanel(title = "Home page", 
                     fluidPage(
                       
