@@ -73,7 +73,16 @@ shinyServer(function(input, output, session) {
                        color=~ColorPal(realSum),
                        stroke = FALSE,
                        fillOpacity = 0.7, 
-                       label = ~paste(as.character(floor(realSum)), "€", "Note des utilisateurs :", as.character(guest_satisfaction_overall), "/100"),
+                       label = ~ paste(
+                         as.character(floor(realSum)),
+                         "€, ",
+                         "Note des utilisateurs :",as.character(guest_satisfaction_overall),"/100, ",
+                         "\n",
+                         "Type de Chambre :",room_type,", ",
+                         "Capacité :",person_capacity,"pers, ",
+                         "\n",
+                         "distance metro :",round(metro_dist, 2)
+                       ), 
                        group = "circles")|> 
       addPolygons(data = europe_polygons,
                   fillColor = ~pal(mean),
