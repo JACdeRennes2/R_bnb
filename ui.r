@@ -44,11 +44,11 @@ navbarPage(title = "R_bnb",
                           radioButtons("time_week", "Moment de la semaine :", choices = week_de),
                           sliderInput("values_range", "Montant des locations (en €) :", min = floor(min(airbnb_data$realSum)), max = 1000, value = c(floor(min(airbnb_data$realSum)), 1000)),
                           checkboxInput("more_than_1000", "Afficher les valeurs supérieures à 1000", FALSE),
-                          plotOutput("hist")
+                          plotOutput("hist", height = "350px")
                         ),
                         
                         mainPanel(
-                          leafletOutput("carte", height = 750, width = 900)
+                          leafletOutput("carte", height = 700, width = 900)
                         )
                       )
                     )
