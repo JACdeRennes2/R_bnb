@@ -193,7 +193,7 @@ Aucune caractéristique ne semble plus importante que les autres quand il s'agit
 Pour illustrer nos données, nous avons réalisé une application sur R Shiny présentant une carte intéractive réalisée avec le package leaflet.</br>
 Nous avons fait un zoom sur l'Europe occidentale et nous avons représenté les clusters des locations disponibles sur Airbnbs dans les 10 villes de notre base de données.</br>
 Les pays sont colorés en fonction du prix moyen des locations et chaque bien est coloré en fonction de son prix.</br>
-Nous avons ajouté un filtre permettant de sélectionner le pays que l'on souhaite, un bouton pour choisir la période, ainsi qu'une barre de pricing permettant de sélectionner une fourchette de prix.</br>
+Nous avons ajouté un filtre permettant de zoomer sur la ville du pays sélectionné, un bouton pour choisir la période, ainsi qu'une barre de pricing permettant de sélectionner une fourchette de prix.</br>
 Nous avons également ajouté un histogramme représentant la répartition des Airbnbs en fonction du prix. L'histogramme s'adapte à la sélection.
 
 
