@@ -24,7 +24,7 @@ navbarPage(title = "R_bnb",
                    p("Choisissez un pays dans le menu déroulant et un moment de la semaine en cliquant sur les boutons radio."),
                    p("Vous pouvez également ajuster le montant des locations en utilisant le curseur et afficher les valeurs supérieures à 1000 en cochant la case correspondante."),
                    p("Ensuite, explorez la carte pour voir les locations Airbnb dans le pays choisi."),
-                   p("Les locations sont représentées par des marqueurs rouges, et la taille des marqueurs correspond au montant de la location."),
+                   p("Les locations sont représentées par des marqueurs de couleurs différentes selon le montant de la location."),
                    p("Cliquez sur un marqueur pour obtenir plus d'informations sur cette location.")
                  ),
                  mainPanel(
