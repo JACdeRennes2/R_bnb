@@ -9,12 +9,12 @@ output:
 
 ## Descritption de notre sujet
 
-Notre projet porte sur la représentation des Aibnbs au sein des grandes capitales européennes, plus particulièrement sur le prix de location des biens imobiliers renseignés sur l'application.</br>
+Notre projet porte sur la représentation des Aibnbs au sein des grandes villes européennes, plus particulièrement sur le prix de location des biens imobiliers renseignés sur l'application.</br>
 Notre travail comporte deux parties. Dans la première nous tenterons d'expliquer les différences de prix entre les logements et dans la deuxième nous nous intéresserons à la représentation graphique de la répartitions des biens.
 
 Nos données proviennent du site kaggle : https://www.kaggle.com/datasets/thedevastator/airbnb-prices-in-european-cities
 
-Nous disposons du prix des locations la semaine et le week-end pour 10 capitales européennes.
+Nous disposons du prix des locations la semaine et le week-end pour 10 villes européennes.
 
 ## Problématique: quels sont les facteurs qui permettent d'expliquer la différence de prix entre deux biens?
 
@@ -191,9 +191,9 @@ Aucune caractéristique ne semble plus importante que les autres quand il s'agit
 ## Application R Shiny
 
 Pour illustrer nos données, nous avons réalisé une application sur R Shiny présentant une carte intéractive réalisée avec le package leaflet.</br>
-Nous avons fait un zoom sur l'Europe occidentale et nous avons représenté les clusters des locations disponibles sur Airbnbs dans les 10 capitales de notre base de données.</br>
+Nous avons fait un zoom sur l'Europe occidentale et nous avons représenté les clusters des locations disponibles sur Airbnbs dans les 10 villes de notre base de données.</br>
 Les pays sont colorés en fonction du prix moyen des locations et chaque bien est coloré en fonction de son prix.</br>
-Nous avons ajouté un filtre permettant de sélectionner le pays que l'on souhaite, un bouton pour choisir la période, ainsi qu'une barre de pricing permettant de sélectionner une fourchette de prix.</br>
+Nous avons ajouté un filtre permettant de zoomer sur la ville du pays sélectionné, un bouton pour choisir la période, ainsi qu'une barre de pricing permettant de sélectionner une fourchette de prix.</br>
 Nous avons également ajouté un histogramme représentant la répartition des Airbnbs en fonction du prix. L'histogramme s'adapte à la sélection.
 
 
