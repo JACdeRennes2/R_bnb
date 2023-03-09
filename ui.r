@@ -5,6 +5,7 @@ library(rAmCharts)
 library(leaflet)
 library(shinythemes)
 library(ggmap)
+library(shinyWidgets)
 
 airbnb_data <- read.csv("data/data_R_bnb.csv")
 pays_liste <- unique(airbnb_data$pays)
@@ -12,6 +13,11 @@ week_de <- unique(airbnb_data$period)
 
 
 navbarPage(title = "R_bnb",
+           setBackgroundColor(
+             color = c("pink", "white"),
+             gradient = "radial",
+             direction = c("top", "left")
+           ),
            theme = shinytheme("flatly"),
            tabPanel(
              title = "Accueil",
