@@ -152,12 +152,11 @@ shinyServer(function(input, output, session) {
       labs(fill = "Période")
   })
   # Page stats desc
-  output$host <- renderPlot({
-    # Calcul du nombre total de listings par ville
-    listing_counts <- airbnb_data %>% group_by(city) %>% summarise(realSum = n())
+  output$host <- renderPlot({# Calcul du nombre total de listings par ville
+    listing_counts <- airbnb_data %>% group_by(pays) %>% summarise(realSum = n())
     # Calcul du nombre de Superhosts par ville
-    superhost_count <- airbnb_data %>% group_by(city) %>% summarise(host_is_superhost = sum(host_is_superhost))
-    superhost_count$abbr <- toupper(substr(superhost_count$city, 1, 3))
+    superhost_count <- airbnb_data %>% group_by(pays) %>% summarise(host_is_superhost = sum(host_is_superhost=="True"))
+    superhost_count$abbr <- toupper(substr(superhost_count$pays, 1, 3))
     # Fusion des deux dataframes
     listing_superhost_count <- merge(listing_counts, superhost_count)
     listing_superhost_count <- listing_superhost_count[order(listing_superhost_count$realSum, decreasing = TRUE), ]
@@ -173,9 +172,9 @@ shinyServer(function(input, output, session) {
         stat = "identity",
         color = "black"
       ) +
-      scale_fill_manual(values = c("#E8E8E8", "#FC814A")) +
+      scale_fill_manual(values = c("#FF5A5F", "#00A699")) +
       scale_x_continuous(expand = c(0, 0), limits = c(0, 10000)) +
-      labs(title = "Superhost to total Listings per City", x = "", y = "") +
+      labs(title = "Proportion d'hébérgeur certifié par ville", x = "", y = "") +
       guides(fill = guide_legend(
         nrow = 1,
         byrow = TRUE,
