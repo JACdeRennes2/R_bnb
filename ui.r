@@ -33,6 +33,14 @@ navbarPage(title = "R_bnb",
                     )
            ),
            tabPanel(title = "Stat desc",
-                    "content 3")
+                    fluidPage(
+                      titlePanel("Stat des"), 
+                      
+                      sidebarLayout(
+                        sidebarPanel(),
+                        mainPanel(
+                          plotOutput("host")
+                        ))
+                    ))
 )
 

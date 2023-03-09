@@ -125,5 +125,55 @@ shinyServer(function(input, output, session) {
       ggtitle("Répartition des airbnbs en fonction du prix") +
       labs(fill = "Période")
   })
+  # Page stats desc
+  output$host <- renderPlot({
+    # Calcul du nombre total de listings par ville
+    listing_counts <- airbnb_data %>% group_by(city) %>% summarise(realSum = n())
+    # Calcul du nombre de Superhosts par ville
+    superhost_count <- airbnb_data %>% group_by(city) %>% summarise(host_is_superhost = sum(host_is_superhost))
+    superhost_count$abbr <- toupper(substr(superhost_count$city, 1, 3))
+    # Fusion des deux dataframes
+    listing_superhost_count <- merge(listing_counts, superhost_count)
+    listing_superhost_count <- listing_superhost_count[order(listing_superhost_count$realSum, decreasing = TRUE), ]
+    
+    # Calcul du pourcentage de Superhosts par ville
+    listing_superhost_count$perc <- round((listing_superhost_count$host_is_superhost / listing_superhost_count$realSum) * 100, 1)
+    listing_superhost_count$perc <- paste0(listing_superhost_count$perc, "%")
+    listing_superhost_count <- arrange(listing_superhost_count, desc(host_is_superhost))
+    ggplot(listing_superhost_count, aes(x = realSum, y = abbr)) +
+      geom_bar(aes(fill = "total"), stat = "identity", color = "black") +
+      geom_bar(
+        aes(x = host_is_superhost, y = abbr, fill = "Superhosts"),
+        stat = "identity",
+        color = "black"
+      ) +
+      scale_fill_manual(values = c("#E8E8E8", "#FC814A")) +
+      scale_x_continuous(expand = c(0, 0), limits = c(0, 10000)) +
+      labs(title = "Superhost to total Listings per City", x = "", y = "") +
+      guides(fill = guide_legend(
+        nrow = 1,
+        byrow = TRUE,
+        title = NULL
+      )) +
+      theme(
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.text.y = element_text(size = 10),
+        axis.ticks.y = element_blank(),
+        axis.text.x = element_text(size = 10),
+        axis.ticks.x = element_line(size = 0.3),
+        legend.position = "bottom",
+        legend.direction = "horizontal",
+        legend.key.size = unit(1.2, "lines"),
+        legend.text = element_text(size = 10),
+        legend.title = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(size = 0.5, colour = "black"),
+        plot.title = element_text(hjust = 0.5)
+      )
+  })
+  
+  
+  
   
 })
