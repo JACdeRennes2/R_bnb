@@ -152,4 +152,10 @@ shinyServer(function(input, output, session) {
       labs(fill = "Période")
   })
   
+  output$carte_acceuil <- renderPlot({
+    ggmap(get_stamenmap(c(left = -12, bottom = 35, right = 30, top = 63), zoom = 5,"watercolor"))+ 
+      geom_point(data = europe_polygons, aes(x = longitudes, y = latitudes),
+                 color = "blue", size = 5)
+  })
+  
 })

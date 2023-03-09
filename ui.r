@@ -4,6 +4,7 @@ library(shinydashboard)
 library(rAmCharts)
 library(leaflet)
 library(shinythemes)
+library(ggmap)
 
 airbnb_data <- read.csv("data/data_R_bnb.csv")
 pays_liste <- unique(airbnb_data$pays)
@@ -28,7 +29,8 @@ navbarPage(title = "R_bnb",
                    p("Cliquez sur un marqueur pour obtenir plus d'informations sur cette location.")
                  ),
                  mainPanel(
-                   h2("Bienvenue sur R_bnb !")
+                   h2("Bienvenue sur R_bnb !"),
+                   plotOutput("carte_acceuil")
                  )
                )
              )
