@@ -1,60 +1,63 @@
 ---
 title: "R_bnb"
+author: Clément PEREON, Anatole GAYANT, Jules AVIGNON
 output: 
   html_document:
     theme: cosmo
     highlight: espresso
 ---
 
-# Quels sont les facteurs qui permettent d'expliquer la différence de prix entre 2 biens?
+## Descritption de notre sujet
 
-les données proviennet du site kaggle : https://www.kaggle.com/datasets/thedevastator/airbnb-prices-in-european-cities
+Notre projet porte sur la représentation des Aibnbs au sein des grandes villes européennes, plus particulièrement sur le prix de location des biens imobiliers renseignés sur l'application.</br>
+Notre travail comporte deux parties. Dans la première nous tenterons d'expliquer les différences de prix entre les logements et dans la deuxième nous nous intéresserons à la représentation graphique de la répartitions des biens.
+
+Nos données proviennent du site kaggle : https://www.kaggle.com/datasets/thedevastator/airbnb-prices-in-european-cities
+
+Nous disposons du prix des locations la semaine et le week-end pour 10 villes européennes.
+
+## Problématique: quels sont les facteurs qui permettent d'expliquer la différence de prix entre deux biens?
 
 ```{r, include=FALSE}
-#Importation des données
+# Importation des données
 data_R_bnb <- na.omit(read.csv("data/data_rmd_R_bnb.csv", stringsAsFactors = TRUE, row.names = 1))
 ```
 
-Les donnés donnent le détails des prix des Airbnb en fonction de plusieurs variables et du moment de la semaine. Ainsi on peut voir que les prix moyen des airbnb n'est pas le même la semaine et le weekend
+### Premières analyses
 
 ```{r, fig.align='center', echo=FALSE}
 library(knitr)
-#prix moyen des airbnb la semaine 
-prix_moyen_semaine <- round(mean(data_R_bnb$prix_semaine), digits = 2 )
-#prix moyen des aibrnb le weekend
+
+# Prix moyen des airbnbs la semaine 
+prix_moyen_semaine <- round(mean(data_R_bnb$prix_semaine), digits = 2)
+
+# Prix moyen des aibrnbs le weekend
 prix_moyen_week_end <- round(mean(data_R_bnb$prix_weekend), 2)
 
-# Création d'une data.frame pour afficher les résultats
-resultats <- data.frame(Prix_moyen = c(prix_moyen_semaine, prix_moyen_week_end),Période = c("Semaine", "Weekend"))
+# Création d'un data.frame pour afficher les résultats
+resultats <- data.frame(prix_moyen = c(prix_moyen_semaine, prix_moyen_week_end),Période = c("Semaine", "Weekend"))
 
-# Affichage des résultats avec le package knitr
-kable(resultats, format = "markdown", align = "c", caption = "Prix moyens des Airbnb par période")
+# Affichage des résultats à l'aide du package knitr
+kable(resultats, format = "markdown", align = "c", caption = "Prix moyens des Airbnbs selon la période")
 ```
 
 ```{r, include=FALSE}
 rm(prix_moyen_semaine,prix_moyen_week_end)
 ```
 
-On cherche à quantifier l'influence de plusieurs variables explicatives sur le prix des Airbnb. Et plus précisément qu'elles sont celles qui permettent d'expliquer une différence de prix entre la semaine et le weekend. 
-En effet, on observe une différence de prix des biens entre la semaine et le weekend. Cependant on peut observer que cette différence de prix entre la semaine et le week-end n'est pas la même pour tous les biens. Comme le montre le graphique suivant 
+On cherche à quantifier l'influence de plusieurs variables explicatives sur le prix des Airbnbs. Plus précisément, nous cherchons les variables qui permettent d'expliquer la différence de prix entre la semaine et le weekend. On observe dans un premier temps que cette différence de prix n'est pas la même pour tous les biens, comme le montre les boxplots suivant:
 
-
-
-```{r, fig.align='center'}
-# Chargement des packages nécessaires
+```{r, fig.align='center', echo=FALSE}
 library(ggplot2)
 library(tidyr)
 
-# Exemple de données
 data <- data.frame(
   semaine = data_R_bnb$prix_semaine,
   weekend = data_R_bnb$prix_weekend
 )
 
-# Transformation des données en format long
 data_long <- gather(data, key = "prix", value = "valeur")
 
-# Création du boxplot en facettes
 ggplot(data_long, aes(x = prix, y = valeur)) +
   geom_boxplot() +
   facet_grid(. ~ prix, scales = "free_x")+ 
@@ -62,32 +65,13 @@ ggplot(data_long, aes(x = prix, y = valeur)) +
     xlab("moment de la semaine")
 ```
 
-
-```{r, include=FALSE    }
+```{r, include=FALSE}
 rm(data, data_long)
 ```
 
-Sur le Graphique précédent il est clair que les Airbnb sont plus cher le weekend que la semaine. On peut remarquer cependant que la hausse des prix n'est pas exactement partout la même. (Il semblerait que plus le logement est cher la semaine plus ce dernier est cher le weekend). Nous avons fait le choix de limiter la taille du graphique car dans la base de données il existe une trentaine de logements qui sont a plus de 8 000€. Ces données empêchent donc toute représentation du jeu de données. 
+Il est clair que les Airbnbs sont plus chers le weekend que la semaine. On peut remarquer cependant que la différence des prix n'est pas exactement la même pour tous les Airbnbs. Il semblerait en effet que plus un logement est cher la semaine, plus ce dernier est cher le weekend. Nous avons fait le choix de limiter la taille de l'échantillon représenté car, dans notre base de données, il y a une trentaine de logements dont le coût de location dépasse les 8 000€, ce qui compromet la comparaison.
 
-```{r, fig.align='center', include=FALSE}
-library(plotly)
-library(dplyr)
-```
-
-
-```{r, fig.align='center'}
-p <- ggplot(data_R_bnb, aes(x = prix_weekend, y = prix_semaine)) +
-     geom_point(aes(color = room_type), size = 2.5) +
-     theme_classic() +
-     xlab("Prix weekend") +
-     ylab("Prix semaine") +
-     labs(color = "Type de chambre") +
-     scale_color_manual(values = c("#FA8072", "#20B2AA", "#1E90FF"))
-ggplotly(p)
-```
-
-
-Nous allons tenter de modéliser le prix des logements par les variables suivantes: 
+Nous allons à présent modéliser le prix des logements en fonction des variables suivantes: 
 
 * room_type : facteur à 3 modalités (appartement privé, chambre partagé, chambre privée)
 * person_capacity : Nombre de personnes pouvant loger dans l'appartement
@@ -98,10 +82,25 @@ Nous allons tenter de modéliser le prix des logements par les variables suivant
 * metro_dist : distance au métro
 * dist : distance au centre de la ville
 
+```{r, fig.align='center', messages=FALSE}
+library(plotly)
+library(dplyr)
+```
 
-# Analyse de corrélation 
+```{r, fig.align='center', echo=FALSE}
+p <- ggplot(data_R_bnb, aes(x = prix_weekend, y = prix_semaine)) +
+     geom_point(aes(color = room_type), size = 2.5) +
+     theme_classic() +
+     xlab("Prix weekend") +
+     ylab("Prix semaine") +
+     labs(color = "Type de chambre") +
+     scale_color_manual(values = c("#FA8072", "#20B2AA", "#1E90FF"))
+ggplotly(p)
+```
 
-```{r, fig.align='center'}
+### Analyse des corrélations
+
+```{r, fig.align='center', echo=FALSE}
 library(corrplot)
 # Création de variables intermédiaire
 variables_num1 <- data_R_bnb[,c("prix_semaine", "person_capacity", "cleanliness_rating","guest_satisfaction_overall","bedrooms", "metro_dist", "dist")]
@@ -118,13 +117,13 @@ corrplot(cor_data2, method = c("shade"), type = "lower",order="hclust", tl.col="
 rm(cor_data1,cor_data2)
 ```
 
-A la vue du graphique précédent, on n'observe pas de différence significative entre la corrélation des variables la semaine et le weekends.
+A la vue du graphique précédent, on n'observe pas de différence significative entre la corrélation des variables la semaine et le week-end.
 
-# Anova 
+### Anova 
 
-On peut réaliser une analyse de variance (ANOVA) pour déterminer si le prix moyen des logements diffère significativement entre les différentes catégories de room_type ou de host_is_superhost   
+On peut réaliser une analyse de variance (ANOVA) pour déterminer si le prix moyen des logements diffère significativement entre les différentes catégories de room_type ou de host_is_superhost.  
 
-```{r, fig.align='center'}
+```{r, fig.align='center', echo=FALSE}
 ggplot(data_R_bnb, aes(x=room_type, y=prix_semaine, fill=host_is_superhost)) +
   geom_boxplot() +
   labs(x="Type de chambre", y="Prix/semaine", fill="Hôte de confiance") +
@@ -135,16 +134,15 @@ ggplot(data_R_bnb, aes(x=room_type, y=prix_weekend, fill=host_is_superhost)) +
   geom_boxplot() +
   labs(x="Type de chambre", y="Prix/weekend", fill="Hôte de confiance") +
   theme_classic()+
-    coord_cartesian(ylim = c(35, 500))+ggtitle("Boxplot des prix des chambres le weekend selon les modalités des chambres")
+    coord_cartesian(ylim = c(35, 500))+ggtitle("Boxplot des prix des chambres le week-end selon les modalités des chambres")
 ```
 
-On remarque que les maison et les appartement entiers dont le propriétaires n'est pas super host ont tendances à être plus cher que ceux dont le propriétaire est super host. Ce qui semble déconcertant. On remaque que les chambres privés semblent ne pas suivre la même loi, puisque les prix sont les quasi les mêmes pour les 2. 
+#### Analyse de la variance pour les prix de la semaine
 
-
-## Analyse de variance pour les prix de la semaine
-```{r}
+```{r, echo=FALSE}
 library(knitr)
 library(broom)
+
 anova_result <- aov(prix_semaine ~ room_type + host_is_superhost, data=data_R_bnb)
 anova_summary <- tidy(anova_result)
 kable(anova_summary, digits = 2, caption = "Résultats de l'ANOVA pour les prix de la semaine")
@@ -152,13 +150,11 @@ kable(anova_summary, digits = 2, caption = "Résultats de l'ANOVA pour les prix 
 tukey_result <- TukeyHSD(anova_result, "room_type")
 tukey_summary <- as.data.frame(tukey_result$`room_type`)
 kable(tukey_summary, digits = 2, caption = "Comparaison multiple de Tukey pour les prix de la semaine")
-
 ```
 
-## Analyse de variance pour les prix du week-end
-```{r}
+#### Analyse de la variance pour les prix du week-end
 
-## Analyse de variance pour les prix du week-end
+```{r, echo=FALSE}
 anova_result <- aov(prix_weekend ~ room_type + host_is_superhost, data=data_R_bnb)
 anova_summary <- tidy(anova_result)
 kable(anova_summary, digits = 2, caption = "Résultats de l'ANOVA pour les prix du week-end")
@@ -168,26 +164,42 @@ tukey_summary <- as.data.frame(tukey_result$`room_type`)
 kable(tukey_summary, digits = 2, caption = "Comparaison multiple de Tukey pour les prix du week-end")
 ```
 
+On remarque que les maisons et les appartements entiers dont les propriétaires ne sont pas super host ont tendance à être plus chers que ceux dont les propriétaires sont super host, ce qui semble déconcertant. On observe l'inverse pour ce qui est des chambres partagés et des chambres simples.  
 
-# Régression linéaire
-```{r}
+### Régression linéaire
 
-#regression semaine
+```{r, echo=FALSE}
+# Regression semaine
 reg1 <-  lm(prix_semaine~room_type+person_capacity+host_is_superhost+cleanliness_rating+bedrooms+guest_satisfaction_overall+metro_dist+dist, data = data_R_bnb)
 tbl1 <- kable(summary(reg1)$coefficients, caption = "Résumé de la régression linéaire pour la semaine", border = "solid")
 
-# reg lin weekend
+# Regression weekend
 reg2 <-  lm(prix_weekend~room_type+person_capacity+host_is_superhost+cleanliness_rating+guest_satisfaction_overall+bedrooms+metro_dist+dist, data = data_R_bnb)
 tbl2 <- kable(summary(reg2)$coefficients, caption = "Résumé de la régression linéaire pour le weekends", border = "solid")
 
-### Résumé de la régression linéaire pour le premier jeu de données
+# Résumé de la régression linéaire pour le premier jeu de données
 tbl1
 
-### Résumé de la régression linéaire pour le deuxième jeu de données
+# Résumé de la régression linéaire pour le deuxième jeu de données
 tbl2
 ```
 
+### Conclusion 
 
-# Conclusion 
+Aucune caractéristique ne semble plus importante que les autres quand il s'agit d'expliquer la différence de prix des Airbnbs entre la semaine et le weekend.
 
-Aucune caractéristique ne semblent plus importante que les autres quand il s'agit d'expliquer la différence de prix des Airbnb entre la semaine et le weekend. 
+## Application R Shiny
+
+Pour illustrer nos données, nous avons réalisé une application sur R Shiny présentant une carte intéractive réalisée avec le package leaflet.</br>
+Nous avons fait un zoom sur l'Europe occidentale et nous avons représenté les clusters des locations disponibles sur Airbnbs dans les 10 villes de notre base de données.</br>
+Les pays sont colorés en fonction du prix moyen des locations et chaque bien est coloré en fonction de son prix.</br>
+Nous avons ajouté un filtre permettant de zoomer sur la ville du pays sélectionné, un bouton pour choisir la période, ainsi qu'une barre de pricing permettant de sélectionner une fourchette de prix.</br>
+Nous avons également ajouté un histogramme représentant la répartition des Airbnbs en fonction du prix. L'histogramme s'adapte à la sélection.
+
+
+
+
+
+
+
+
