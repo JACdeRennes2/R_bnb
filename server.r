@@ -153,9 +153,9 @@ shinyServer(function(input, output, session) {
   })
   # Page stats desc
   output$host <- renderPlot({# Calcul du nombre total de listings par ville
-    listing_counts <- airbnb_data %>% group_by(pays) %>% summarise(realSum = n())
+    listing_counts <- airbnb_data |> group_by(pays) |> summarise(realSum = n())
     # Calcul du nombre de Superhosts par ville
-    superhost_count <- airbnb_data %>% group_by(pays) %>% summarise(host_is_superhost = sum(host_is_superhost=="True"))
+    superhost_count <- airbnb_data |> group_by(pays) |> summarise(host_is_superhost = sum(host_is_superhost=="True"))
     superhost_count$abbr <- toupper(substr(superhost_count$pays, 1, 3))
     # Fusion des deux dataframes
     listing_superhost_count <- merge(listing_counts, superhost_count)
@@ -165,7 +165,7 @@ shinyServer(function(input, output, session) {
     listing_superhost_count$perc <- round((listing_superhost_count$host_is_superhost / listing_superhost_count$realSum) * 100, 1)
     listing_superhost_count$perc <- paste0(listing_superhost_count$perc, "%")
     listing_superhost_count <- arrange(listing_superhost_count, desc(host_is_superhost))
-    ggplot(listing_superhost_count, aes(x = realSum, y = abbr)) +
+    ggplot(listing_superhost_count, aes(x = realSum, y = reorder(abbr, realSum))) +
       geom_bar(aes(fill = "total"), stat = "identity", color = "black") +
       geom_bar(
         aes(x = host_is_superhost, y = abbr, fill = "Superhosts"),
