@@ -5,6 +5,7 @@ library(dplyr)
 library(maps)
 library(sf)
 library(maptools)
+library(rgdal)
 
 #weekends
 amsterdam_weekends <- read.csv("data/amsterdam_weekends.csv", stringsAsFactors=TRUE)
@@ -68,3 +69,25 @@ data <-  data[-1]
 
 write.csv(data, file = "data/data_rmd_R_bnb.csv", fileEncoding = "utf-8")
 
+# ==============================================================================
+
+airbnb_data <- read.csv("data/data_R_bnb.csv")
+europe_polygons <- st_read("data/NUTS_RG_20M_2021_3035.shp") 
+
+mean_prices <- airbnb_data |> 
+  group_by(pays, period) |> 
+  filter(period=="weekends") |> 
+  summarise(mean(realSum))
+
+europe_polygons <- st_transform(europe_polygons, crs = 4326)
+europe_polygons <- europe_polygons[c(11, 5, 24, 1, 22, 3, 62, 70, 28, 43), c(2,4,10)]
+europe_polygons$NAME_LATN <- c("Allemagne", "Autriche", "Espagne", "France", "Grece", "Hongrie", "Italie", "Pays-Bas", "Portugal", "Royaume-Uni")
+names(europe_polygons) <- c("LEVL_CODE","pays", "geometry")
+europe_polygons$LEVL_CODE <- mean_prices$`mean(realSum)`
+europe_polygons$LEVL_CODE <- round(europe_polygons$LEVL_CODE)
+names(europe_polygons) <- c("mean", "pays", "geometry")
+
+europe_polygons$longitudes <- c(13.4, 16.37, 2.17, 2.33, 23.73, 19.04, 12.5, 4.90, -9.14, -0.13)
+europe_polygons$latitudes <- c(52.52, 48.21, 41.39, 48.87, 37.98, 47.5, 41.9, 52.37, 38.72, 51.51)
+
+st_write(europe_polygons, "data/europe_polygons.shp")
