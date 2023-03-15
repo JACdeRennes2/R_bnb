@@ -57,7 +57,7 @@ shinyServer(function(input, output, session) {
   
   lng <- reactive({
     if(input$pays == "Europe") {
-      8.25
+      3.25
     } else {
       europe_polygons$longitudes[which(europe_polygons$pays == input$pays)]
     }
@@ -65,7 +65,7 @@ shinyServer(function(input, output, session) {
   
   zoom <- reactive({
     if(input$pays == "Europe") {
-      5
+      4
     } else {
       12
     }
