@@ -5,9 +5,10 @@ library(dplyr)
 library(leaflet)
 library(st)
 library(sf)
+library(tibble)
 
 
-airbnb_data <- read.csv("data/data_R_bnb.csv", encoding = "utf-8")
+airbnb_data <- read.csv("data/data_R_bnb.csv", encoding = "utf-8", stringsAsFactors = TRUE)
 europe_polygons <- st_read("data/NUTS_RG_20M_2021_3035.shp") 
 
 mean_prices <- airbnb_data |> 
@@ -152,7 +153,8 @@ shinyServer(function(input, output, session) {
       labs(fill = "Période")
   })
   # Page stats desc
-  output$host <- renderPlot({# Calcul du nombre total de listings par ville
+  output$host <- renderPlot({
+    # Calcul du nombre total de listings par ville
     listing_counts <- airbnb_data |> group_by(pays) |> summarise(realSum = n())
     # Calcul du nombre de Superhosts par ville
     superhost_count <- airbnb_data |> group_by(pays) |> summarise(host_is_superhost = sum(host_is_superhost=="True"))
@@ -194,8 +196,123 @@ shinyServer(function(input, output, session) {
         legend.title = element_blank(),
         panel.background = element_blank(),
         axis.line = element_line(size = 0.5, colour = "black"),
-        plot.title = element_text(hjust = 0.5)
+        plot.title = element_text(hjust = 0.5,size = 15, face = 'bold')
       )
+  })
+  # Stat desc 
+  output$pie <- renderPlot({
+    library(ggplot2)
+    library(tibble)
+    library(gridExtra)
+    
+    #Pie chart de home type 
+    df = data.frame(summary(airbnb_data$room_type))
+    df <- tibble::add_column(df, row.names = row.names(df), .before = 1)
+    colnames(df) <- c("Type", "Count")
+    
+    
+    p1 <- ggplot(df, aes(x = "", y = Count, fill = Type)) + 
+      geom_bar(stat = "identity", width = 1) +
+      coord_polar(theta = "y")  +
+      geom_text(aes(label = paste0(round(Count/sum(Count)*100), "%")),
+                position = position_stack(vjust = 0.5), size = 5)+
+      ggtitle("Répartition des différents type de bien")+
+      theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5), 
+                plot.title.position = "plot")
+    rm(df)
+    
+    # Pie chart des person capacity
+    df = data.frame(table(airbnb_data$person_capacity))
+    colnames(df) <- c("Type", "Count")
+    
+    
+    p2 <- ggplot(df, aes(x = "", y = Count, fill = Type)) + 
+      geom_bar(stat = "identity", width = 1) +
+      coord_polar(theta = "y")  +
+      geom_text(aes(label = paste0(round(Count/sum(Count)*100), "%")),
+                position = position_stack(vjust = 0.5), size = 5)+
+      ggtitle("Person capcity Graph")+
+      theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5), 
+            plot.title.position = "plot")
+    rm(df)
+    
+    # Pie Chart de biz
+    
+    df = data.frame(table(airbnb_data$biz))
+    colnames(df) <- c("Type", "Count")
+    df$Type <- ifelse(df$Type == 0, "Non Pro", "Uniquement Pro")
+    
+    p3 <- ggplot(df, aes(x = "", y = Count, fill = Type)) + 
+      geom_bar(stat = "identity", width = 1) +
+      coord_polar(theta = "y")  +
+      geom_text(aes(label = paste0(round(Count/sum(Count)*100), "%")),
+                position = position_stack(vjust = 0.5), size = 5)+
+      ggtitle("Répartiton des airbnb réservés aux professionels")+
+      theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5), 
+            plot.title.position = "plot")
+    rm(df)
+    
+    # hist de guest_satisfaction_overall
+    df <- data.frame(x = airbnb_data$guest_satisfaction_overall)
+    df$x[which(df$x<50)] <- 50  
+    p4 <- ggplot(df, aes(x = x)) +
+      geom_histogram((aes(y = ..density..)),binwidth = 5, boundary = 0, fill = "lightblue", color = "black") +
+      labs(x = "Notes", y = "Nombre d'observations", title = "Histogramme des notes des apat")+
+      theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5), 
+            plot.title.position = "plot")
+    
+    # Pie chart de Cleanliness_rating
+    
+    df = data.frame(table(airbnb_data$cleanliness_rating))
+    colnames(df) <- c("Type", "Count")
+    # Remplacer les valeurs de Type inférieures à 7 par "Autres"
+    df$Type <- ifelse(df$Type %in% levels(df$Type)[1:5], "Autres", as.character(df$Type))
+    
+    # Regrouper les comptages par Type
+    df <- aggregate(df$Count, by = list(Type = df$Type), sum)
+    
+    p5 <- ggplot(df, aes(x = "", y = x, fill = Type)) + 
+      geom_bar(stat = "identity", width = 1) +
+      coord_polar(theta = "y")  +
+      geom_text(aes(label = paste0(round(x/sum(x)*100), "%")),
+                position = position_stack(vjust = 0.5), size = 5)+
+      ggtitle("Notes de propreté des airbnb")+
+      theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5), 
+            plot.title.position = "plot")
+    rm(df)
+    
+    rm(df)
+    # métro distance 
+    df <- data.frame(x = airbnb_data$metro_dist)
+    p6 <- ggplot(data = df, aes(x = x,y = ..density..)) +
+      geom_histogram(bins = 15, fill = "blue", alpha = 0.5) +
+      ggtitle("Histogrme de la distance au métro le plus proche") +
+      xlab("Distance en km") +
+      ylab("Fréquence")+
+      theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5), 
+            plot.title.position = "plot")
+    
+    rm(df)
+    
+    grid.arrange(p1, p2, p3, p4, p5, p6, nrow = 2)
+    rm(p1,p2,p3,p4,p5,p6)
+  })
+  # Graphique du prix moyen semaine
+  output$prix <- renderPlot({
+    ggplot(airbnb_data, aes(x = period, y = log(realSum), fill = period)) +
+      geom_boxplot() +
+      facet_wrap(~ pays, ncol = 2) +
+      scale_fill_manual(values = c("weekdays" = "lightblue", "weekends" = "pink")) +
+      labs(title = "Prix semaine et weekend par pays",
+           x = "Période",
+           y = "log(Prix (en euros))") +
+      theme_bw() +
+      theme(plot.title = element_text(hjust = 0.5),
+            legend.position = "none") +
+      coord_flip()+
+      theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5), 
+            plot.title.position = "plot")
+    
   })
   
   
