@@ -6,15 +6,18 @@ library(leaflet)
 library(shinythemes)
 library(ggmap)
 library(shinyWidgets)
+library(htmltools)
 
 airbnb_data <- read.csv("data/data_R_bnb.csv")
 pays_liste <- unique(airbnb_data$pays)
 week_de <- unique(airbnb_data$period)
+logo <- tags$img(src = "data/logo_rbnb_xs.png", height = "30px")
 
 
-navbarPage(title = "R_bnb",
+navbarPage(title = logo,
+           windowTitle="R bnb",
            setBackgroundColor(
-             color = c("pink", "white"),
+             color = c("#FF5A5F", "white"),
              gradient = "radial",
              direction = c("top", "left")
            ),
@@ -69,5 +72,9 @@ navbarPage(title = "R_bnb",
                         plotOutput("pie", height= 800),
                       plotOutput("prix", height = 1000)
                     ))
+
+                      
+                    
+            
 )
 

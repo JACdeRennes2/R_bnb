@@ -197,7 +197,8 @@ shinyServer(function(input, output, session) {
         panel.background = element_blank(),
         axis.line = element_line(size = 0.5, colour = "black"),
         plot.title = element_text(hjust = 0.5,size = 15, face = 'bold')
-      )
+      )+theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5), 
+            plot.title.position = "plot")
   })
   # Stat desc 
   output$pie <- renderPlot({
@@ -307,11 +308,9 @@ shinyServer(function(input, output, session) {
            x = "Période",
            y = "log(Prix (en euros))") +
       theme_bw() +
-      theme(plot.title = element_text(hjust = 0.5),
+      theme(plot.title = element_text(hjust = 0.5, face = 'bold', size = 15),
             legend.position = "none") +
-      coord_flip()+
-      theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5), 
-            plot.title.position = "plot")
+      coord_flip()
     
   })
   
