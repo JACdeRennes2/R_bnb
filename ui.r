@@ -16,6 +16,7 @@ logo <- tags$img(src = "data/logo_rbnb_xs.png", height = "30px")
 
 navbarPage(title = logo,
            windowTitle="R bnb",
+           collapsible = TRUE,
            setBackgroundColor(
              color = c("#FF5A5F", "white"),
              gradient = "radial",
@@ -39,29 +40,32 @@ navbarPage(title = logo,
                  ),
                  mainPanel(
                    h2("Bienvenue sur R_bnb !"),
-                   plotOutput("carte_acceuil")
+                   plotOutput("carte_acceuil", width = 400, height = 400)
                  )
                )
              )
            ),
-           tabPanel(title = "Home page", 
-                    fluidPage(
-                      
-                      titlePanel("Carte des AirBnBs en Europe"),
-                      
-                      sidebarLayout(
-                        sidebarPanel(
+           tabPanel(title = "Carte",
+                    div(class="outer",
+                        
+                        tags$head(
+                          includeCSS("style.css"),
+                          includeScript("gomap.js")
+                        ),
+                        
+                        leafletOutput("carte", width="100%", height="100%"),
+                        
+                        absolutePanel(
+                          id = "controls",
+                          width = 400,
+                          class = "panel panel-default",
+                          top = 30, left = 10,
                           selectInput("pays", "Choisir un pays :", choices = c("Europe", pays_liste)),
                           radioButtons("time_week", "Moment de la semaine :", choices = week_de),
                           sliderInput("values_range", "Montant des locations (en €) :", min = floor(min(airbnb_data$realSum)), max = 1000, value = c(floor(min(airbnb_data$realSum)), 1000)),
                           checkboxInput("more_than_1000", "Afficher les valeurs supérieures à 1000", FALSE),
                           plotOutput("hist", height = "350px")
-                        ),
-                        
-                        mainPanel(
-                          leafletOutput("carte", height = 700, width = 900)
                         )
-                      )
                     )
            ),
            tabPanel(title = "Stat desc",
@@ -74,7 +78,4 @@ navbarPage(title = logo,
                     ))
 
                       
-                    
-            
 )
-

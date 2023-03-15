@@ -6,6 +6,8 @@ library(leaflet)
 library(st)
 library(sf)
 library(tibble)
+library(ggplot2)
+library(gridExtra)
 
 
 airbnb_data <- read.csv("data/data_R_bnb.csv", encoding = "utf-8", stringsAsFactors = TRUE)
@@ -75,7 +77,7 @@ shinyServer(function(input, output, session) {
   
   lng <- reactive({
     if(input$pays == "Europe") {
-      8.25
+      3.25
     } else {
       europe_polygons$longitudes[which(europe_polygons$pays == input$pays)]
     }
@@ -83,7 +85,7 @@ shinyServer(function(input, output, session) {
   
   zoom <- reactive({
     if(input$pays == "Europe") {
-      5
+      4
     } else {
       12
     }
@@ -323,4 +325,5 @@ shinyServer(function(input, output, session) {
                  color = "blue", size = 5)
   })
   
+
 })
