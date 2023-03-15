@@ -56,6 +56,8 @@ navbarPage(title = logo,
                         leafletOutput("carte", width="100%", height="100%"),
                         
                         absolutePanel(
+                          id = "controls",
+                          width = 400,
                           class = "panel panel-default",
                           top = 30, left = 10,
                           selectInput("pays", "Choisir un pays :", choices = c("Europe", pays_liste)),
@@ -68,13 +70,11 @@ navbarPage(title = logo,
            ),
            tabPanel(title = "Stat desc",
                     fluidPage(
-                      titlePanel("Stat des"), 
-                      
-                      sidebarLayout(
-                        sidebarPanel(),
-                        mainPanel(
-                          plotOutput("host")
-                        ))
+                      fullscreen = TRUE,
+                      titlePanel("Statitistique descripitve"), 
+                      plotOutput("host"), 
+                      plotOutput("pie", height= 800),
+                      plotOutput("prix", height = 1000)
                     )
-            )
+          )
 )
