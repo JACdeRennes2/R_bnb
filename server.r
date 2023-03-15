@@ -91,6 +91,12 @@ shinyServer(function(input, output, session) {
     }
   })
   
+  output$logo <- renderImage({
+    list(src = "data/logo_rbnb_s.png",
+         alt = "This is alternate text"
+    )
+  })
+  
   output$carte <- renderLeaflet({
     leaflet(data = airbnb_data_filtre()) |>
       setView(lng = lng(), lat = lat(), zoom = zoom()) |> 

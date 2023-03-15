@@ -11,10 +11,8 @@ library(htmltools)
 airbnb_data <- read.csv("data/data_R_bnb.csv")
 pays_liste <- unique(airbnb_data$pays)
 week_de <- unique(airbnb_data$period)
-logo <- tags$img(src = "data/logo_rbnb_xs.png", height = "30px")
 
-
-navbarPage(title = logo,
+navbarPage(title = "R bnb",
            windowTitle="R bnb",
            collapsible = TRUE,
            setBackgroundColor(
@@ -40,6 +38,9 @@ navbarPage(title = logo,
                  ),
                  mainPanel(
                    h2("Bienvenue sur R_bnb !"),
+                   box(
+                     imageOutput('logo')
+                   ),
                    plotOutput("carte_acceuil", width = 400, height = 400)
                  )
                )
@@ -76,6 +77,4 @@ navbarPage(title = logo,
                         plotOutput("pie", height= 800),
                       plotOutput("prix", height = 1000)
                     ))
-
-                      
 )
