@@ -17,7 +17,7 @@ logo <- tags$img(src = "data/logo_rbnb_xs.png", height = "30px")
 navbarPage(title = logo,
            windowTitle="R bnb",
            setBackgroundColor(
-             color = c("pink", "white"),
+             color = c("#FF5A5F", "white"),
              gradient = "radial",
              direction = c("top", "left")
            ),
@@ -73,6 +73,7 @@ navbarPage(title = logo,
                         mainPanel(
                           plotOutput("host")
                         ))
-                    ))
+                    )
+            )
 )
 
