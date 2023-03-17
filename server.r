@@ -31,11 +31,11 @@ europe_polygons$latitudes <- c(52.52, 48.21, 41.39, 48.87, 37.98, 47.5, 41.9, 52
 
 
 ColorPal <-  colorQuantile(
-  palette = c("yellow", "red", "brown"),
+  palette = c("#00ff00","yellow", "red"),
   domain = airbnb_data$realSum,
   probs = seq(0, 1, by = 0.1)
 )
-pal <- colorNumeric(scales::seq_gradient_pal(low = "yellow", high = "red",
+pal <- colorNumeric(scales::seq_gradient_pal(low = "#FFCEE6", high = "#360167",
                                              space = "Lab"), domain = europe_polygons$mean)
 
 
