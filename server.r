@@ -31,11 +31,11 @@ europe_polygons$latitudes <- c(52.52, 48.21, 41.39, 48.87, 37.98, 47.5, 41.9, 52
 
 
 ColorPal <-  colorQuantile(
-  palette = c("yellow", "red", "brown"),
+  palette = c("#00ff00","yellow", "red"),
   domain = airbnb_data$realSum,
   probs = seq(0, 1, by = 0.1)
 )
-pal <- colorNumeric(scales::seq_gradient_pal(low = "#25FDE9", high = "#F00020",
+pal <- colorNumeric(scales::seq_gradient_pal(low = "#FFCEE6", high = "#360167",
                                              space = "Lab"), domain = europe_polygons$mean)
 
 
@@ -155,6 +155,7 @@ shinyServer(function(input, output, session) {
   output$hist <- renderPlot({
     ggplot(airbnb_data_histo(), aes(x = realSum, fill=period)) +
       geom_histogram(bins=20) +
+      scale_fill_manual(values = c("#360167", "#FFCEE6")) +
       xlim(input$values_range) +
       xlab("Prix") +
       ggtitle("Répartition des airbnbs en fonction du prix") +

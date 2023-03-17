@@ -72,7 +72,7 @@ navbarPage(title = "R bnb",
            tabPanel(title = "Stat desc",
                     fluidPage(
                       fullscreen = TRUE,
-                      titlePanel("Statitistique descripitve"), 
+                      titlePanel("Statistique descriptive"), 
                         plotOutput("host"), 
                         plotOutput("pie", height= 800),
                       plotOutput("prix", height = 1000)
