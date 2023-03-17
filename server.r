@@ -35,7 +35,7 @@ ColorPal <-  colorQuantile(
   domain = airbnb_data$realSum,
   probs = seq(0, 1, by = 0.1)
 )
-pal <- colorNumeric(scales::seq_gradient_pal(low = "yellow", high = "red",
+pal <- colorNumeric(scales::seq_gradient_pal(low = "#25FDE9", high = "#F00020",
                                              space = "Lab"), domain = europe_polygons$mean)
 
 
