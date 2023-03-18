@@ -40,8 +40,15 @@ navbarPage(title = "R bnb",
                column(
                  width = 5,
                  imageOutput('logo'),
-                 h2("À propos du projet"),
-                 p("Le projet R_bnb a pour objectif d'analyser les données d'Airbnb en Europe.")
+                 h2("Plus d'information "),
+                 p("Le projet R_bnb a pour objectif d'analyser les données d'Airbnb en Europe."),
+                 p("Nos données proviennent du site kaggle : https://www.kaggle.com/datasets/thedevastator/airbnb-prices-in-european-cities"),
+                 p("Nous disposons du prix des locations la semaine et le week-end pour 10 villes européennes.Ainsi que de variables tel que :"),
+                 p("* Le type de bien"),
+                 p("* Nombre de place dans la chambre"),
+                 p("* Note de propretée"), 
+                 p("* Note des utilisateurs"), 
+                 p("Avec cette aplication Shiny vous pouvez retrouver l'étude que nous avons effectués pour expliquer la différence de prix des biens que l'on observe entre la semaine et le weekend. ")
                ))
            ),
            tabPanel(title = "Carte",
