@@ -42,12 +42,12 @@ navbarPage(title = "R bnb",
                  imageOutput('logo'),
                  h2("Plus d'informations"),
                  p("Nos données proviennent du site kaggle : https://www.kaggle.com/datasets/thedevastator/airbnb-prices-in-european-cities"),
-                 p("Nous disposons du prix des locations la semaine et le week-end pour 10 grandes villes européennes. Ainsi que de variables telles que :"),
+                 p("Nous disposons du prix des locations la semaine et le week-end pour 10 grandes villes européennes, ainsi que de variables telles que :"),
                  p("* Le type de bien"),
-                 p("* Le nombre de place dans la chambre"),
+                 p("* Le nombre de places dans la chambre"),
                  p("* La note de propretée"), 
                  p("* La note des utilisateurs"), 
-                 p("Avec cette aplication Shiny, vous pouvez retrouver l'étude que nous avons effectué pour expliquer la différence de prix des biens que l'on observe entre la semaine et le weekend. ")
+                 p("Avec cette aplication Shiny, vous pouvez retrouver l'étude que nous avons effectuée pour expliquer la différence de prix des biens que l'on observe entre la semaine et le weekend. ")
                ))
            ),
            tabPanel(title = "Carte",
