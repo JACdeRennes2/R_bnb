@@ -177,6 +177,8 @@ Nous avons ajouté un filtre permettant de zoomer sur la ville du pays sélectio
 Nous avons également ajouté un histogramme représentant la répartition des Airbnb en fonction du prix. L'histogramme s'adapte à la sélection.</br>
 Sur une deuxième page, nous avons fait figurer un ensemble de graphes présentant des statistiques descriptives diverses et variées sur les variables.
 
+Lien vers l'application: https://jacderennes2.shinyapps.io/r_bnb/
+
 
 
 
