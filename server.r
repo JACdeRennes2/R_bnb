@@ -289,7 +289,7 @@ shinyServer(function(input, output, session) {
 
     # métro distance 
     df6 <- data.frame(x = airbnb_data$metro_dist)
-    p6 <- ggplot(data = df6, aes(x = x,y = ..density..)) +
+    p6 <- ggplot(data = df6, aes(x = x,y = after_stat(density))) +
       geom_histogram(bins = 15, fill = "blue", alpha = 0.5) +
       ggtitle("Histogrme de la distance au métro le plus proche") +
       xlab("Distance en km") +
