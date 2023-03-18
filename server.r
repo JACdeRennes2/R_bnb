@@ -185,7 +185,7 @@ shinyServer(function(input, output, session) {
       ) +
       scale_fill_manual(values = c("#FF5A5F", "#00A699")) +
       scale_x_continuous(expand = c(0, 0), limits = c(0, 10000)) +
-      labs(title = "Proportion d'hébérgeur certifié par ville", x = "", y = "") +
+      labs(title = "Proportion d'hébérgeurs certifiés par ville", x = "", y = "") +
       guides(fill = guide_legend(
         nrow = 1,
         byrow = TRUE,
@@ -222,7 +222,7 @@ shinyServer(function(input, output, session) {
       coord_polar(theta = "y")  +
       geom_text(aes(label = paste0(round(Count/sum(Count)*100), "%")),
                 position = position_stack(vjust = 0.5), size = 5)+
-      ggtitle("Répartition des différents type de bien")+
+      ggtitle("Répartition des différents types de biens")+
       theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5), 
                 plot.title.position = "plot")
     rm(df1)
@@ -237,7 +237,7 @@ shinyServer(function(input, output, session) {
       coord_polar(theta = "y")  +
       geom_text(aes(label = paste0(round(Count/sum(Count)*100), "%")),
                 position = position_stack(vjust = 0.5), size = 5)+
-      ggtitle("Person capcity Graph")+
+      ggtitle("Capacité d'accueil des logements")+
       theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5), 
             plot.title.position = "plot")
     rm(df2)
@@ -263,7 +263,7 @@ shinyServer(function(input, output, session) {
     df4$x[which(df4$x<50)] <- 50  
     p4 <- ggplot(df4, aes(x = x)) +
       geom_histogram((aes(y = after_stat(density))),binwidth = 5, boundary = 0, fill = "lightblue", color = "black") +
-      labs(x = "Notes", y = "Nombre d'observations", title = "Histogramme des notes des apat")+
+      labs(x = "Notes", y = "Nombre d'observations", title = "Histogramme des notes des logements")+
       theme(plot.title = element_text(size = 15, face = "bold", hjust = 0.5), 
             plot.title.position = "plot")
     
