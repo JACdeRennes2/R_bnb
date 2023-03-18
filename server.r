@@ -92,7 +92,7 @@ shinyServer(function(input, output, session) {
   })
   
   output$logo <- renderImage({
-    list(src = "data/logo_rbnb_s.png",
+    list(src = "data/logo_rbnb_ss.png",
          alt = "This is alternate text"
     )
   })
